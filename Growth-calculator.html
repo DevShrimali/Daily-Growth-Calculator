@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Growth Calculator</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: var(--light-bg);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+        
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .result-container {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        #result {
+            font-size: 22px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        #resultText {
+            font-size: 16px;
+            color: #666;
+            word-wrap: break-word;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            input, button {
+                padding: 10px 12px;
+            }
+            
+            #result {
+                font-size: 20px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h2 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Daily Growth Calculator</h2>
+        
+        <div class="input-group">
+            <label for="initialAmount">Initial Amount:</label>
+            <input type="number" id="initialAmount" placeholder="Enter initial amount">
+        </div>
+        
+        <div class="input-group">
+            <label for="growthRate">Daily Growth Rate (%):</label>
+            <input type="number" id="growthRate" placeholder="Enter growth rate" value="6">
+        </div>
+        
+        <div class="input-group">
+            <label for="days">Number of Days:</label>
+            <input type="number" id="days" placeholder="Enter number of days" value="45">
+        </div>
+        
+        <button onclick="calculateGrowth()">Calculate</button>
+        
+        <div class="result-container">
+            <h3 id="result">Final Amount: -</h3>
+            <h4 id="resultText"></h4>
+        </div>
+    </div>
+    
+    <script>
+        function numberToWords(num) {
+            const a = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+            const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+            
+            function convert(n) {
+                if (n < 20) return a[n];
+                if (n < 100) return b[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + a[n % 10] : "");
+                if (n < 1000) return a[Math.floor(n / 100)] + " Hundred" + (n % 100 !== 0 ? " and " + convert(n % 100) : "");
+                if (n < 100000) return convert(Math.floor(n / 1000)) + " Thousand" + (n % 1000 !== 0 ? " " + convert(n % 1000) : "");
+                if (n < 10000000) return convert(Math.floor(n / 100000)) + " Lakh" + (n % 100000 !== 0 ? " " + convert(n % 100000) : "");
+                return convert(Math.floor(n / 10000000)) + " Crore" + (n % 10000000 !== 0 ? " " + convert(n % 10000000) : "");
+            }
+            return convert(num);
+        }
+        
+        function calculateGrowth() {
+            let initialAmount = parseFloat(document.getElementById('initialAmount').value);
+            let growthRate = parseFloat(document.getElementById('growthRate').value) / 100;
+            let days = parseInt(document.getElementById('days').value);
+            
+            if (isNaN(initialAmount) || isNaN(growthRate) || isNaN(days) || initialAmount <= 0 || days <= 0) {
+                alert("Please enter valid inputs.");
+                return;
+            }
+            
+            let finalAmount = initialAmount * Math.pow(1 + growthRate, days);
+            
+            // Format with thousand separators
+            const formattedAmount = new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 2
+            }).format(finalAmount);
+            
+            document.getElementById('result').innerText = `Final Amount: ${formattedAmount}`;
+            document.getElementById('resultText').innerText = `In Words: ${numberToWords(Math.floor(finalAmount))} Rupees`;
+        }
+    </script>
+</body>
+</html>
