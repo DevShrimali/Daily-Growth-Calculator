@@ -13,6 +13,24 @@
             --light-bg: #f8f9fa;
             --border-radius: 8px;
             --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            --background-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --container-bg: white;
+            --input-bg: #f8f9fa;
+            --result-border: #eee;
+            --result-text: #666;
+        }
+
+        .dark-mode {
+            --primary-color: #5a7fff;
+            --secondary-color: #6a5aff;
+            --accent-color: #7a6bff;
+            --text-color: #e0e0e0;
+            --light-bg: #2c2c2c;
+            --background-gradient: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+            --container-bg: #1f1f1f;
+            --input-bg: #2a2a2a;
+            --result-border: #444;
+            --result-text: #aaa;
         }
         
         * {
@@ -25,26 +43,44 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--background-gradient);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: background 0.3s, color 0.3s;
         }
         
         .container {
-            background-color: white;
+            background-color: var(--container-bg);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             width: 100%;
             max-width: 500px;
             padding: 30px;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s, box-shadow 0.3s;
+            position: relative;
         }
         
         .container:hover {
             transform: translateY(-5px);
+        }
+        
+        .mode-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            transition: transform 0.3s;
+            z-index: 10;
+        }
+
+        .mode-toggle:hover {
+            transform: rotate(180deg);
         }
         
         h2 {
@@ -72,7 +108,8 @@
             border-radius: var(--border-radius);
             font-size: 16px;
             transition: border-color 0.3s, box-shadow 0.3s;
-            background-color: var(--light-bg);
+            background-color: var(--input-bg);
+            color: var(--text-color);
         }
         
         input:focus {
@@ -102,7 +139,7 @@
         .result-container {
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--result-border);
         }
         
         #result {
@@ -113,7 +150,7 @@
         
         #resultText {
             font-size: 16px;
-            color: #666;
+            color: var(--result-text);
             word-wrap: break-word;
         }
         
@@ -152,6 +189,10 @@
 </head>
 <body>
     <div class="container">
+        <button class="mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode">
+            🌓
+        </button>
+        
         <h2>Daily Growth Calculator</h2>
         
         <div class="input-group">
@@ -215,6 +256,21 @@
             document.getElementById('result').innerText = `Final Amount: ${formattedAmount}`;
             document.getElementById('resultText').innerText = `In Words: ${numberToWords(Math.floor(finalAmount))} Rupees`;
         }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            // Optionally, save the user's preference in localStorage
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Check for saved dark mode preference
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        });
     </script>
 </body>
 </html>
